@@ -496,11 +496,36 @@ body {
     transform: translateY(-2px);
 }
 
+.saved-palette-name {
+    color: #fffe04;
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5);
+}
+
+.saved-palette-preview {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    gap: 4px;
+    margin-bottom: 10px;
+    padding: 8px 0;
+}
+
+.saved-block-preview {
+    width: 100%;
+    aspect-ratio: 1;
+    background-size: cover;
+    background-position: center;
+    border: 1px solid #444444;
+    border-radius: 2px;
+}
+
 .saved-palette-item-actions {
     display: flex;
     gap: 8px;
     margin-top: 10px;
-    justify-content: flex-end;
+    justify-content: center;
 }
 
 .saved-palette-item-actions button {
@@ -513,6 +538,7 @@ body {
     color: #888888;
     font-size: 0.8em;
     margin-top: 8px;
+    text-align: center;
 }
 
 .modal {
@@ -672,7 +698,7 @@ body {
     }
 
     .saved-palette-preview {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
     }
 
     .search-input {
@@ -699,6 +725,138 @@ body {
     }
 }
 
+/* Import Container Styles */
+.import-container {
+    background: #2a2a2a;
+    border: 4px solid #1a1a1a;
+    box-shadow: inset 2px 2px 0px rgba(255, 255, 255, 0.2),
+                inset -2px -2px 0px rgba(0, 0, 0, 0.5),
+                0px 8px 16px rgba(0, 0, 0, 0.8);
+    padding: clamp(30px, 5%, 45px);
+    width: 100%;
+    max-width: 900px;
+    animation: slideIn 0.3s ease;
+}
+
+.import-content {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.import-header {
+    text-align: center;
+    color: #fffe04;
+}
+
+.import-header h2 {
+    font-size: clamp(1.5em, 5vw, 2.5em);
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.8);
+    margin-bottom: 10px;
+}
+
+.import-header p {
+    color: #cccccc;
+    font-size: 1em;
+}
+
+.import-methods {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.import-method {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.import-method h3 {
+    color: #fffe04;
+    font-size: 1.1em;
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5);
+}
+
+.import-textarea {
+    background: #1a1a1a;
+    border: 2px solid #666666;
+    color: #cccccc;
+    padding: 12px 16px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    min-height: 200px;
+    resize: vertical;
+    color-scheme: dark;
+}
+
+.import-textarea:focus {
+    outline: none;
+    border-color: #fffe04;
+    box-shadow: 0 0 8px rgba(255, 254, 4, 0.5);
+}
+
+.import-file {
+    background: #1a1a1a;
+    border: 2px solid #666666;
+    color: #cccccc;
+    padding: 12px 16px;
+    font-family: 'Minecraft', 'Courier New', monospace;
+    cursor: pointer;
+}
+
+.import-file::-webkit-file-upload-button {
+    background: #444444;
+    border: 2px solid #666666;
+    color: #fffe04;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-family: 'Minecraft', 'Courier New', monospace;
+    font-weight: bold;
+}
+
+.import-file::-webkit-file-upload-button:hover {
+    background: #555555;
+    border-color: #fffe04;
+}
+
+.import-hint {
+    color: #888888;
+    font-size: 0.85em;
+    margin-top: 5px;
+}
+
+.import-preview {
+    background: #1a1a1a;
+    border: 2px solid #666666;
+    border-radius: 4px;
+    padding: 15px;
+}
+
+.import-preview h3 {
+    color: #fffe04;
+    margin-bottom: 10px;
+    font-size: 1em;
+}
+
+.import-preview .preview-flat {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+@media (max-width: 800px) {
+    .import-methods {
+        grid-template-columns: 1fr;
+    }
+    
+    .import-textarea {
+        min-height: 150px;
+    }
+}
+
 @media (max-width: 600px) {
     .minecraft-title {
         font-size: 3em;
@@ -711,7 +869,8 @@ body {
 
     .palette-container,
     .custom-builder,
-    .saved-container {
+    .saved-container,
+    .import-container {
         padding: 25px;
     }
 

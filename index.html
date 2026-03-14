@@ -22,6 +22,9 @@
                 <button class="menu-button" id="loadBtn">
                     <span class="button-text">Load Saved</span>
                 </button>
+                <button class="menu-button" id="importBtn">
+                    <span class="button-text">Import Palette</span>
+                </button>
             </div>
         </div>
     </div>
@@ -86,6 +89,38 @@
         
         <div class="builder-actions">
             <button class="action-button" id="backBtn">Back</button>
+        </div>
+    </div>
+
+    <div id="importContainer" class="import-container hidden">
+        <div class="import-content">
+            <div class="import-header">
+                <h2>Import Palette</h2>
+                <p>Paste your palette JSON code below</p>
+            </div>
+            
+            <div class="import-methods">
+                <div class="import-method">
+                    <h3>Paste JSON Code</h3>
+                    <textarea id="importTextarea" class="import-textarea" placeholder='Paste your palette JSON here, e.g.: ["blockId1", "blockId2", ...]'></textarea>
+                </div>
+                
+                <div class="import-method">
+                    <h3>Upload File</h3>
+                    <input type="file" id="importFile" class="import-file" accept=".json,.txt" />
+                    <p class="import-hint">Select a .json or .txt file containing palette data</p>
+                </div>
+            </div>
+            
+            <div class="import-preview" id="importPreview" style="display: none;">
+                <h3>Preview</h3>
+                <div class="preview-flat" id="importPreviewBlocks"></div>
+            </div>
+            
+            <div class="builder-actions">
+                <button class="action-button" id="importPaletteBtn">Import Palette</button>
+                <button class="action-button" id="importCancelBtn">Cancel</button>
+            </div>
         </div>
     </div>
 

@@ -6,6 +6,7 @@ const BLOCKS = [
     { id: 'bricks', name: 'Bricks' },
     { id: 'brownWool', name: 'Brown Wool' },
     { id: 'cake', name: 'Cake' },
+    { id: 'clayBlock', name: 'Clay' },
     { id: 'carvedPumpkin', name: 'Carved Pumpkin' },
     { id: 'coalOre', name: 'Coal Ore' },
     { id: 'cobblestone', name: 'Cobblestone' },
@@ -50,6 +51,7 @@ const BLOCKS = [
     { id: 'sandStone', name: 'Sandstone' },
     { id: 'smoothStone', name: 'Smooth Stone' },
     { id: 'snowyGrassBlock', name: 'Snowy Grass Block' },
+    { id: 'snowBlock', name: 'Snow' },
     { id: 'soulSand', name: 'Soul Sand' },
     { id: 'spongeBlock', name: 'Sponge Block' },
     { id: 'spruceLog', name: 'Spruce Log' },
@@ -69,6 +71,7 @@ const ui = {
     generateBtn: document.getElementById('generateBtn'),
     createBtn: document.getElementById('createBtn'),
     loadBtn: document.getElementById('loadBtn'),
+    importBtn: document.getElementById('importBtn'),
     saveBtn: document.getElementById('saveBtn'),
     newBtn: document.getElementById('newBtn'),
     copyBtn: document.getElementById('copyBtn'),
@@ -79,9 +82,12 @@ const ui = {
     modalConfirm: document.getElementById('modalConfirm'),
     randomizeBtn: document.getElementById('randomizeBtn'),
     exportBtn: document.getElementById('exportBtn'),
+    importPaletteBtn: document.getElementById('importPaletteBtn'),
+    importCancelBtn: document.getElementById('importCancelBtn'),
     paletteContainer: document.getElementById('paletteContainer'),
     customBuilder: document.getElementById('customBuilder'),
     savedContainer: document.getElementById('savedContainer'),
+    importContainer: document.getElementById('importContainer'),
     paletteBlocks: document.getElementById('paletteBlocks'),
     blocksSelector: document.getElementById('blocksSelector'),
     paletteNameInput: document.getElementById('paletteNameInput'),
@@ -96,6 +102,10 @@ const ui = {
     previewStats: document.getElementById('previewStats'),
     blockCount: document.getElementById('blockCount'),
     paletteStats: document.getElementById('paletteStats'),
+    importTextarea: document.getElementById('importTextarea'),
+    importFile: document.getElementById('importFile'),
+    importPreview: document.getElementById('importPreview'),
+    importPreviewBlocks: document.getElementById('importPreviewBlocks'),
 };
 
 function init() {
@@ -108,6 +118,7 @@ function wireUpEventListeners() {
     ui.generateBtn.addEventListener('click', generateRandomPalette);
     ui.createBtn.addEventListener('click', showCustomBuilder);
     ui.loadBtn.addEventListener('click', showSavedPalettes);
+    ui.importBtn.addEventListener('click', showImportUI);
     ui.saveBtn.addEventListener('click', savePalette);
     ui.newBtn.addEventListener('click', goToMenu);
     ui.copyBtn.addEventListener('click', copyPaletteAsCode);
@@ -116,9 +127,13 @@ function wireUpEventListeners() {
     ui.buildSaveBtn.addEventListener('click', createCustomPalette);
     ui.cancelBtn.addEventListener('click', goToMenu);
     ui.backBtn.addEventListener('click', goToMenu);
+    ui.importCancelBtn.addEventListener('click', goToMenu);
     ui.modalBtn.addEventListener('click', closeAlert);
     ui.modalConfirm.addEventListener('click', confirmDelete);
     ui.blockSearch.addEventListener('input', handleSearch);
+    ui.importTextarea.addEventListener('input', handleImportInput);
+    ui.importFile.addEventListener('change', handleImportFile);
+    ui.importPaletteBtn.addEventListener('click', processImport);
 }
 
 function generateRandomPalette() {
@@ -428,8 +443,122 @@ function copyPaletteAsCode() {
     });
 }
 
+function showImportUI() {
+    reset();
+    ui.importTextarea.value = '';
+    ui.importFile.value = '';
+    ui.importPreview.style.display = 'none';
+    ui.importContainer.classList.remove('hidden');
+}
+
+function handleImportInput(e) {
+    const value = e.target.value.trim();
+    if (value) {
+        try {
+            previewImportedPalette(value);
+        } catch (err) {
+            // Invalid JSON, don't show preview
+            ui.importPreview.style.display = 'none';
+        }
+    } else {
+        ui.importPreview.style.display = 'none';
+    }
+}
+
+function handleImportFile(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            ui.importTextarea.value = event.target.result;
+            handleImportInput({ target: ui.importTextarea });
+        };
+        reader.readAsText(file);
+    }
+}
+
+function previewImportedPalette(jsonString) {
+    const blockIds = JSON.parse(jsonString);
+    
+    if (!Array.isArray(blockIds)) {
+        throw new Error('Invalid format: expected an array');
+    }
+    
+    const blocks = blockIds
+        .map(id => BLOCKS.find(b => b.id === id))
+        .filter(Boolean);
+    
+    if (blocks.length === 0) {
+        throw new Error('No valid blocks found');
+    }
+    
+    ui.importPreviewBlocks.innerHTML = '';
+    blocks.forEach(block => {
+        const tile = createBlockTile(block, 'block');
+        const label = document.createElement('span');
+        label.style.cssText = 'margin-left: 8px; color: #aaa; font-size: 0.8em;';
+        label.textContent = block.name;
+        const container = document.createElement('div');
+        container.style.cssText = 'display: flex; align-items: center; gap: 8px;';
+        container.appendChild(tile);
+        container.appendChild(label);
+        ui.importPreviewBlocks.appendChild(container);
+    });
+    
+    ui.importPreview.style.display = 'block';
+}
+
+function processImport() {
+    const jsonString = ui.importTextarea.value.trim();
+    
+    if (!jsonString) {
+        showAlert('Please paste JSON palette code or select a file');
+        return;
+    }
+    
+    try {
+        const blockIds = JSON.parse(jsonString);
+        
+        if (!Array.isArray(blockIds)) {
+            showAlert('Invalid format: expected an array of block IDs');
+            return;
+        }
+        
+        const blocks = blockIds
+            .map(id => BLOCKS.find(b => b.id === id))
+            .filter(Boolean);
+        
+        if (blocks.length === 0) {
+            showAlert('No valid blocks found in the palette data');
+            return;
+        }
+        
+        if (blocks.length < 5) {
+            showAlert('Palette must contain at least 5 blocks');
+            return;
+        }
+        
+        if (blocks.length > 12) {
+            showAlert('Palette must contain at most 12 blocks');
+            return;
+        }
+        
+        // Create palette from imported blocks
+        currentPalette = blocks;
+        ui.paletteNameInput.value = `Imported ${new Date().toLocaleDateString()}`;
+        showPalette();
+        
+    } catch (err) {
+        if (err instanceof SyntaxError) {
+            showAlert('Invalid JSON format. Please check your palette code.');
+        } else {
+            showAlert(`Error: ${err.message}`);
+        }
+    }
+}
+
 function reset() {
-    document.querySelectorAll('.menu-container, .palette-container, .custom-builder, .saved-container')
+    document.querySelectorAll('.menu-container, .palette-container, .custom-builder, .saved-container, .import-container')
         .forEach(el => el.classList.add('hidden'));
 }
 
