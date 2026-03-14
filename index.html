@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Betapalettes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="menu-container">
+        <div class="menu-panel">
+            <h1 class="minecraft-title">Betapalettes</h1>
+            <p class="minecraft-subtitle">Beta 1.7.3 Edition!</p>
+            
+            <div class="menu-buttons">
+                <button class="menu-button" id="generateBtn">
+                    <span class="button-text">Generate Random</span>
+                </button>
+                <button class="menu-button" id="createBtn">
+                    <span class="button-text">Create Custom</span>
+                </button>
+                <button class="menu-button" id="loadBtn">
+                    <span class="button-text">Load Saved</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="paletteContainer" class="palette-container hidden">
+        <div class="palette-header">
+            <h2 id="paletteName">My Palette</h2>
+            <input type="text" id="paletteNameInput" class="palette-name-input" placeholder="Palette name..." />
+        </div>
+        
+        <div class="palette-blocks" id="paletteBlocks"></div>
+        
+        <div class="palette-stats" id="paletteStats"></div>
+        
+        <div class="palette-actions">
+            <button class="action-button" id="saveBtn">Save Palette</button>
+            <button class="action-button" id="randomizeBtn">Randomize</button>
+            <button class="action-button" id="newBtn">New Palette</button>
+            <button class="action-button" id="copyBtn">Copy as Code</button>
+            <button class="action-button secondary" id="exportBtn">Export</button>
+        </div>
+    </div>
+
+    <div id="customBuilder" class="custom-builder hidden">
+        <div class="builder-container">
+            <div class="builder-main">
+                <div class="builder-header">
+                    <h2>Build Custom Palette</h2>
+                    <p>Select blocks to create your palette (5-12 blocks)</p>
+                    <div class="search-box">
+                        <input type="text" id="blockSearch" class="search-input" placeholder="Search blocks..." />
+                    </div>
+                </div>
+                
+                <div class="blocks-selector" id="blocksSelector"></div>
+                
+                <div class="builder-actions">
+                    <button class="action-button" id="buildSaveBtn">Create Palette</button>
+                    <button class="action-button" id="cancelBtn">Cancel</button>
+                </div>
+            </div>
+            
+            <div class="builder-preview">
+                <div class="preview-header">
+                    <h3>Preview</h3>
+                    <span class="block-count" id="blockCount">0/12</span>
+                </div>
+                <div class="preview-isometric" id="previewIsometric"></div>
+                <div class="preview-flat" id="previewFlat"></div>
+                <div class="preview-stats" id="previewStats"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="savedContainer" class="saved-container hidden">
+        <div class="saved-header">
+            <h2>Saved Palettes</h2>
+            <p id="savedCount" class="saved-count"></p>
+        </div>
+        
+        <div class="saved-list" id="savedList"></div>
+        
+        <div class="builder-actions">
+            <button class="action-button" id="backBtn">Back</button>
+        </div>
+    </div>
+
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <p id="modalText"></p>
+            <div class="modal-actions" id="modalActions">
+                <button class="modal-button" id="modalBtn">Close</button>
+                <button class="modal-button secondary hidden" id="modalConfirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
